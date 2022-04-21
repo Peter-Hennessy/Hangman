@@ -1,93 +1,47 @@
+'#  Create a game of  where the player choose letters to solve a random name'
 import random
-def hangman () :
-       
-    list_of_words = ['hi', 'cat', 'home', 'country', 'computer', 'phone']
-    word = random.choice(list_of_words)
-    attempts = 5
-    guessmade = ''
-    valid_entry = set ('abcdefghijklmnopqrstuvwxyz')
+import string
+from words import words
 
-while len(word) > 0:
-        main_word = ""
-        missed = 0
- 
-      
-for letter in word:
-       if letter in guessmade:
-        main_word = main_word +letter
 
-       else:
-        main_word = main_word + "_ "
-       if main_word == word:
-            print(main_word)
-            print("You have been granted a pardon!!!!")
-            break
-          
+def get_valid_word(words):
+    word = random.choice(words)
+    while '-' in word or '' in word:
+        word = random.choice(words)
 
-       print("guess the words ", main_word)
-       guess = input()
+    return word
 
-       if guess in valid_entry:
-        guessmade = guessmade + guess 
-       else:
-        print("Enter valid character") 
-        guess = input() 
 
-# Welcome the Player and ask to enter their name
-name = input("Please enter your name gallowman: -->")
-print("Welcome", name,"Who's for hanging today!")
-print("=======================================")
-print("Try to guess in less than 5 attempts")
+def hangman():
+    #  letters used in the word and letters guessed
+    word = get_valid_word(words)
+    word_letters = set(word)  
+    alphabet = set(string.ascii_uppercase)
+    used_letters = set() 
+
+    #  getting user input
+    while len(word_letters) > 0:
+        #  ''.join(['a', 'b', 'cd'])--> 'a b cd'
+        print("you have used these letters: ", ' '.join(used_letters))
+
+        #  what the current word is (ie W - R D)
+        word_list = [letter if letter in used_letters else '-' for letter in word]
+        print("current word: ", ''.join(word_list))
+
+        user_letter = input("Guess a letter: ").upper()
+        if user_letter in alphabet - used_letters:
+            used_letters.add(user_letter)
+            if user_letter in word_letters:
+                word_letters.remove(user_letter)
+
+        elif user_letter in used_letters:
+            print("you've already guessed that one")
+        else:
+            print("invalid character, pleae try again")
+
 hangman()
 
+user_input = input("Type something:")
+print(user_input)
 
 
-
-
-# Create hangman board, guessed letters, and remaing lives
-HANGMAN = ['''
-   +------+
-   |      |
-   |      |
-          |
-          |
-          |
-    =======''', '''
-   +------+
-   |      |
-   O      |
-          |
-          |
-          |
-    =======''', '''
-   +------+
-   |      |
-   O      |
-  /|\     |
-          |
-          |
-   ========''', '''
-   +------+
-   |      |
-   O      |
-  /|\     |
-   |      |
-          |
-   ========''', '''
-   +------+
-   |      |
-   O      |
-  /|\     |
-   |      |
-  / \     |
-  =========
-''']
-# The computer askes the player to select a character
-
-# If the player guesses correctly, show all matched letters and display message
-
-# if the player guesses incorrectly, dipslay falure message and delete lives
-
-# if the player guesses all letters,  win message will appear, and loop will stop
-
-# If the player uses all attempte, print failure and stop looping
